@@ -1,17 +1,14 @@
 from dataclasses import dataclass, field
-from datetime import datetime, date, timedelta
-from typing import ClassVar
+from datetime import date
+from app.services.util import generate_unique_id, guest_not_found_error
+from app.model.hotel import Guest
 
-from app.services.util import (generate_unique_id, date_lower_than_today_error,
-    reservation_not_found_error, guest_not_found_error, room_not_available_error,
-    room_not_found_error, room_already_exists_error)
 
-from dataclasses import dataclass
 # TODO: Implement Guest class here
-
+@dataclass
 class Guest:
-    REGULAR: str = "regular"
-    VIP: str = "vip"
+    REGULAR = "regular"
+    VIP = "vip"
 
     name: str
     email: str
@@ -23,6 +20,27 @@ class Guest:
 
 # TODO: Implement Reservation class here
 
+class Reservation:
+    guest_name: str
+    description: str
+    check_in: date
+    check_out: date
+
+    guests: list[Guest] = field(default_factory=list)
+    id: str = field(default_factory=generate_unique_id)
+
+    def add_guest(self, name: str, email: str, type_: str = Guest.REGULAR):
+        new_guest = Guest(name, email, type_)
+        self.guests.append(new_guest)
+
+    def delete_guest(self, guest_index: int):
+        if 0 <= guest_index < len(self.guests):
+            self.guests.pop(guest_index)
+        else:
+            guest_not_found_error()
+
+    def __len__(self):
+        return (self.check_out - self.check_in).days
 
 # TODO: Implement Room class here
 
