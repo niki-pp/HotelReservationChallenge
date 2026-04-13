@@ -42,6 +42,14 @@ class Reservation:
     def __len__(self):
         return (self.check_out - self.check_in).days
 
+    def __str__(self):
+        return (
+            f"ID: {self.id}\n"
+            f"Guest: {self.guest_name}\n"
+            f"Description: {self.description}\n"
+            f"Dates: {self.check_in} - {self.check_out}"
+        )
+
 # TODO: Implement Room class here
 
 
