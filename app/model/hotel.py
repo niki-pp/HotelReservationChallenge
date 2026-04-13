@@ -2,6 +2,8 @@ from dataclasses import dataclass, field
 from datetime import date
 from app.services.util import generate_unique_id, guest_not_found_error
 from app.model.hotel import Guest
+from datetime import datetime, timedelta, date
+from app.services.util import room_not_available_error, reservation_not_found_error
 
 
 # TODO: Implement Guest class here
@@ -52,5 +54,19 @@ class Reservation:
 
 # TODO: Implement Room class here
 
+class Room:
+    def __init__(self, number: int, type_: str, price_per_night: float):
+        self.number = number
+        self.type_ = type_
+        self.price_per_night = price_per_night
+        self.availability: dict[date, str | None] = {}
+        self._init_availability()
+
+    def _init_availability(self):
+        today = datetime.now().date()
+
+        for i in range(365):
+            current_day = today + timedelta(days=i)
+            self.availability[current_day] = None
 
 # TODO: Implement Hotel class here
